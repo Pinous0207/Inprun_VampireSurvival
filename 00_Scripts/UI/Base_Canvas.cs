@@ -23,7 +23,7 @@ public class Base_Canvas : MonoBehaviour
         MANAGER.SESSION.onHpChanged += HPChanged;
         MANAGER.SESSION.onMonsterCountChanged += M_CountText;
         MANAGER.SESSION.onSelectedCard += SetSkillFrame;
-
+        MANAGER.SESSION.onBossTime += OnBoss;
         SelectCard(true);
     }
 
@@ -46,6 +46,16 @@ public class Base_Canvas : MonoBehaviour
     public Transform activeFrameContent;
     public Transform passiveFrameContent;
     List<GameObject> SkillFrameGorvage = new List<GameObject>();
+
+    public GameObject BossAnimationObj;
+
+    private void OnBoss()
+    {
+        BossAnimationObj.SetActive(true);
+        Invoke(nameof(BossObjectDisabled), 1.2f);
+    }
+
+    private void BossObjectDisabled() => BossAnimationObj.SetActive(false);
 
     private void SetSkillFrame()
     {
@@ -129,7 +139,9 @@ public class Base_Canvas : MonoBehaviour
     private void OnDestroy()
     {
         MANAGER.SESSION.onExpChanged -= EXPChange;
+        MANAGER.SESSION.onHpChanged -= HPChanged;
         MANAGER.SESSION.onMonsterCountChanged -= M_CountText;
         MANAGER.SESSION.onSelectedCard -= SetSkillFrame;
+        MANAGER.SESSION.onBossTime -= OnBoss;
     }
 }

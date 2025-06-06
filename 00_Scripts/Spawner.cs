@@ -9,6 +9,16 @@ public class Spawner : MonoBehaviour
 
     public float timer;
 
+    private void Start()
+    {
+        MANAGER.SESSION.onBossTime += SpawnBossMonster;
+    }
+
+    private void OnDestroy()
+    {
+        MANAGER.SESSION.onBossTime -= SpawnBossMonster;
+    }
+
     private void Update()
     {
         timer += Time.deltaTime;
@@ -19,14 +29,19 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    void SpawnMonsterAtEdge()
+    void SpawnBossMonster()
+    {
+        SpawnMonsterAtEdge("Skeleton_BOSS");
+    }
+
+    void SpawnMonsterAtEdge(string id = "")
     {
         Vector3 spawnPos = GetRandomPointOnCircleEdge(player.position, spawnRadius);
 
         var monster = MANAGER.POOL.Pooling_OBJ("Monster").Get((value) =>
         {
             value.transform.position = spawnPos;
-            value.GetComponent<MONSTER>().Initalize(player);
+            value.GetComponent<MONSTER>().Initalize(player, string.IsNullOrEmpty(id) ? "Skeleton_01" : id);
         });
     }
 

@@ -5,12 +5,14 @@ public delegate void OnExpChanaged(float exp);
 public delegate void OnMonsterCountChanged(int value);
 public delegate void OnSelectedCard();
 public delegate void OnHPChanged(float hp);
+public delegate void OnBossTime();
 public class Session_Mng : MonoBehaviour
 {
     public OnExpChanaged onExpChanged;
     public OnMonsterCountChanged onMonsterCountChanged;
     public OnSelectedCard onSelectedCard;
     public OnHPChanged onHpChanged;
+    public OnBossTime onBossTime;
 
     public List<Orb> Orbs = new List<Orb>();
     public Dictionary<string, SelectCard> SelectedCards = new Dictionary<string, SelectCard>();
@@ -21,6 +23,7 @@ public class Session_Mng : MonoBehaviour
 
     public float EXP;
     public float GameTime;
+    private float BossTime = 10.0f;
 
     public bool isGameOver = false;
 
@@ -65,6 +68,12 @@ public class Session_Mng : MonoBehaviour
     private void Update()
     {
         GameTime += Time.unscaledDeltaTime;
+        if(GameTime >= BossTime)
+        {
+            Debug.Log("보스가 나타났습니다!");
+            BossTime += 10.0f;
+            onBossTime?.Invoke();
+        }
     }
 
     public bool HaveCard(CardDB db)

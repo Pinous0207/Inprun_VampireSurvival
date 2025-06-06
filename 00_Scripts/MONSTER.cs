@@ -9,7 +9,8 @@ public class MONSTER : MonoBehaviour
     public float MaxHP;
 
     public Transform target;
-    public string monsterId;
+
+    public string monsterid;
 
     public bool isSpanwed = false;
     public bool isDead = false;
@@ -18,12 +19,14 @@ public class MONSTER : MonoBehaviour
     private IFactory<MONSTER> factory;
     protected float speedMultiplier = 1.0f;
     protected float shockAmp = 0.0f;
+    protected float skillCooldown = 5.0f;
+    protected float skillTimer;
+    protected Coroutine skillCoroutine;
+    public MonsterSkill monsterSkill;
     public Animator animator;
-
     StatusEffect effect;
-  
 
-    public virtual void Initalize(Transform player)
+    public virtual void Initalize(Transform player, string monsterID)
     {
         if(effect == null)
         {
@@ -31,16 +34,20 @@ public class MONSTER : MonoBehaviour
         }
         MANAGER.SESSION.AddMonster();
         isSpanwed = false;
-        HP = 10;
+        monsterid = monsterID;
+        HP = Boss(monsterID) ? 10 * 10 : 10;
         MaxHP = HP;
 
         isDead = false;
 
-        monsterId = Random.Range(0, 2) == 1 ? "Skeleton_01" : "Skeleton_02";
-
         factory = new GenericPartFactory<MONSTER>(MANAGER.DB.Monster);
         target = player;
-        factory.Build(this, monsterId);
+        factory.Build(this, monsterID);
+    }
+
+    protected bool Boss(string monsterID)
+    {
+        return monsterID.Split("_")[1] == "BOSS";
     }
 
     public void SetStunned(bool isStun)
