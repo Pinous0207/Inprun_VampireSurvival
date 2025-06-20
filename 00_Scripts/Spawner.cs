@@ -5,12 +5,13 @@ public class Spawner : MonoBehaviour
     public float spawnRadius = 10.0f;
     public GameObject monsterPrefab;
     public Transform player;
-    public float spawnInterval = 3.0f;
+    private float spawnInterval;
 
     public float timer;
 
     private void Start()
     {
+        spawnInterval = MANAGER.DB.levelDesign.MonsterSpawnRate;
         MANAGER.SESSION.onBossTime += SpawnBossMonster;
     }
 

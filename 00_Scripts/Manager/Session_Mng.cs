@@ -23,7 +23,7 @@ public class Session_Mng : MonoBehaviour
 
     public float EXP;
     public float GameTime;
-    private float BossTime = 10.0f;
+    private float BossTime;
 
     public bool isGameOver = false;
 
@@ -62,16 +62,16 @@ public class Session_Mng : MonoBehaviour
     private void Start()
     {
         baseMaxHP = HP;
+        BossTime = MANAGER.DB.levelDesign.BossSpawnRate;
         Base_Canvas.instance.HPChanged(HP);
     }
 
     private void Update()
     {
-        GameTime += Time.unscaledDeltaTime;
+        GameTime += Time.deltaTime;
         if(GameTime >= BossTime)
         {
-            Debug.Log("보스가 나타났습니다!");
-            BossTime += 10.0f;
+            BossTime += MANAGER.DB.levelDesign.BossSpawnRate;
             onBossTime?.Invoke();
         }
     }
@@ -137,15 +137,7 @@ public class Session_Mng : MonoBehaviour
     public int GetRequiredExp()
     {
         int level = Level + 1;
-        if (level < 20)
-            return (level * 10) - 5;
-        else if (level == 20)
-            return (level * 10) - 5 + 600;
-        else if (level < 40)
-            return (level * 13) - 6;
-        else if (level == 40)
-            return (level * 13) - 6 + 2400;
-        else return (level * 16) - 8;
+        return Mathf.FloorToInt(5 * Mathf.Pow(level, MANAGER.DB.levelDesign.PlayerExpExponent));
     }
 
     public bool GetCritical()

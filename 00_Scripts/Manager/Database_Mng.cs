@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine.U2D;
 public class Database_Mng : MonoBehaviour
 {
+    public LevelDesign levelDesign;
     public PartDB Monster;
     public PartDB Item;
 
@@ -11,6 +12,11 @@ public class Database_Mng : MonoBehaviour
     public List<CardDB> PassiveCards = new List<CardDB>();
     public List<CardDB> NoneCards = new List<CardDB>();
     SpriteAtlas atlas;
+
+    private void Awake()
+    {
+        levelDesign = Resources.Load<LevelDesign>("DB/LevelDesign");
+    }
 
     private void Start()
     {
